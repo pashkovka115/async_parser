@@ -1,10 +1,38 @@
 import asyncio
+import random
+
 import aiofiles
 import aiohttp
 from time import time
 from lxml import html, etree
 import uvloop
 import urllib.parse
+
+
+
+
+HEADERS = [
+    {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'
+    },
+
+    {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0',
+     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    },
+
+    {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/76.0',
+     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    },
+
+    {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
+    }
+]
+
 
 
 class Asynchronous:
@@ -26,9 +54,11 @@ class Asynchronous:
         self.xpath_next_href = ''
         # объект в котором будет идти поиск
         self.block_xpath = None
+        self.sleep = (2, 5)
 
 
     async def _fetch(self, session, url, *args, **kwargs):
+        await asyncio.sleep(random.randint(*self.sleep))
         async with session.get(url, *args, **kwargs) as response:
             if self.debug:
                 print('Response:', response.status, response.url, flush=True)
@@ -51,7 +81,7 @@ class Asynchronous:
             block_xpath = self.block_xpath
 
         async with self.semaphore:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(headers=random.choice(HEADERS)) as session:
                 html_page = await self._fetch(session, url)
                 if bool(self.xpath_next_href):
                     try:
