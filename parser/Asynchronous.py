@@ -1,47 +1,26 @@
 import asyncio
 import random
 
-import aiofiles
+# import aiofiles
+import sys
+
 import aiohttp
 from time import time
 from lxml import html, etree
 import uvloop
 import urllib.parse
-
-
-
-
-HEADERS = [
-    {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'
-    },
-
-    {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0',
-     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-    },
-
-    {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/76.0',
-     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
-    },
-
-    {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 OPR/68.0.3618.173',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
-    }
-]
-
+from .headers import HEADERS
 
 
 class Asynchronous:
     def __init__(self, debug=True, semaphore=10):
         self.debug = debug
+        self.view_response_html = False
         self.lock = asyncio.Lock()
         self.semaphore = asyncio.Semaphore(semaphore)
         self.runer = False
         self.urls = []
+        self.timeout = 30
         self.start_time = time()
         self.tasks = []
         self.result = None
@@ -55,13 +34,21 @@ class Asynchronous:
         # объект в котором будет идти поиск
         self.block_xpath = None
         self.sleep = (2, 5)
+        self.proxy = None
+        self.response = None
 
 
     async def _fetch(self, session, url, *args, **kwargs):
-        await asyncio.sleep(random.randint(*self.sleep))
-        async with session.get(url, *args, **kwargs) as response:
+        t1 = time()
+        async with session.get(url, timeout=self.timeout, proxy=self.proxy, *args, **kwargs) as response:
+            t2 = time()
+            self.response = await response
+            if self.sleep:
+                await asyncio.sleep(random.randint(*self.sleep))
             if self.debug:
-                print('Response:', response.status, response.url, flush=True)
+                print(round(t2 - t1, 2), 'Response:', response.status, response.url, flush=True)
+            if self.view_response_html:
+                print(await response.text())
             if response.status == 200:
                 return await response.text()
 
@@ -74,50 +61,68 @@ class Asynchronous:
         :param block_xpath: блок(и) в которых будет идти поиск с соответствующей сортировкой контента
         :return: Возвращает список html или список словарей с распарсенными данными
         """
-        if data_xpath is None:
-            data_xpath = {}
-        data_xpath.update(self.xpath_get_data)
-        if block_xpath is None:
-            block_xpath = self.block_xpath
+        try:
+            if data_xpath is None:
+                data_xpath = {}
+                data_xpath.update(self.xpath_get_data)
+            if block_xpath is None:
+                block_xpath = self.block_xpath
 
-        async with self.semaphore:
-            async with aiohttp.ClientSession(headers=random.choice(HEADERS)) as session:
-                html_page = await self._fetch(session, url)
-                if bool(self.xpath_next_href):
-                    try:
-                        self.start_url = urllib.parse.urljoin(
-                            self.domain,
-                            self.xpath(html_page, self.xpath_next_href)[0]
-                        )
-                    except:
+            async with self.semaphore:
+                async with aiohttp.ClientSession(headers=random.choice(HEADERS)) as session:
+                    html_page = await self._fetch(session, url)
+                    if bool(self.xpath_next_href):
+                        try:
+                            self.start_url = urllib.parse.urljoin(
+                                self.domain,
+                                self.xpath(html_page, self.xpath_next_href)[0]
+                            )
+                        except:
+                            self.start_url = ''
+                    else:
                         self.start_url = ''
-                else:
-                    self.start_url = ''
-                # если есть что искать
-                if bool(data_xpath):
-                    data = []
-                    # если есть общие блоки и надо искать в них
-                    if bool(block_xpath):
-                        blocks = self.xpath(html_page, block_xpath) or []
-                        for block in blocks:
+                    # если есть что искать
+                    if bool(data_xpath):
+                        data = []
+                        # если есть общие блоки и надо искать в них
+                        if bool(block_xpath):
+                            blocks = self.xpath(html_page, block_xpath) or []
+                            for block in blocks:
+                                item = {}
+                                for key in data_xpath.keys():
+                                    try:
+                                        tmp = self.xpath(
+                                            etree.tostring(block).decode("utf-8"),
+                                            data_xpath[key]
+                                        )
+                                        if len(tmp) == 1:
+                                            item[key] = tmp[0].strip()
+                                        else:
+                                            item[key] = tmp
+                                    except:
+                                        item[key] = data_xpath[key]
+
+                                data.append(item)
+                            return data
+                        # если контент нужен как общий для страницы или это страница одного объекта
+                        else:
                             item = {}
                             for key in data_xpath.keys():
-                                item[key] = self.xpath(
-                                    etree.tostring(block).decode("utf-8"),
-                                    data_xpath[key]
-                                )
-
+                                try:
+                                    tmp = self.xpath(html_page, data_xpath[key])
+                                    # print(html_page, data_xpath[key])  # todo
+                                    if len(tmp) == 1:
+                                        item[key] = tmp[0].strip()
+                                    else:
+                                        item[key] = tmp
+                                except:
+                                    item[key] = data_xpath[key]
                             data.append(item)
-                        return data
-                    # если контент нужен как общий для страницы или это страница одного объекта
+                            return data
                     else:
-                        item = {}
-                        for key in data_xpath.keys():
-                            item[key] = str(self.xpath(html_page, data_xpath[key]))
-                        data.append(item)
-                        return data
-                else:
-                    return html_page
+                        return html_page
+        except Exception as e:
+            print(type(e), e, type(self), 'Line:', sys.exc_info()[-1].tb_lineno)
 
 
     def add_task(self, task, *args, **kwargs):
@@ -159,13 +164,14 @@ class Asynchronous:
             self.runer = await asyncio.gather(*self.tasks)
 
         elif isinstance(self.start_url, str) and len(self.start_url) > 0:
-            if not bool(self.xpath_get_data):
-                raise Exception('Не задан xpath')
 
             if bool(self.start_url):
                 self.runer = await asyncio.gather(
-                    self.get_data(self.start_url, self.xpath_get_data, self.block_xpath)
-                )
+                    self.get_data(
+                        self.start_url,
+                        self.xpath_get_data,
+                        self.block_xpath
+                    ))
 
         return self.runer
 
@@ -185,5 +191,8 @@ class Asynchronous:
 
 
     def xpath(self, html_code, xpath):
-        t = html.fromstring(html_code)
-        return t.xpath(xpath)
+        try:
+            t = html.fromstring(html_code)
+            return t.xpath(xpath)
+        except:
+            return xpath
