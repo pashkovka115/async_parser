@@ -1,5 +1,6 @@
 from schemes.ListItems import ListItems
 
+# Пример парсинга страницы-ленты
 list_parser = ListItems(
         domain='http://quotes.toscrape.com',
         start_url='http://quotes.toscrape.com',
@@ -13,7 +14,6 @@ list_parser = ListItems(
         xpath_next_url='//li[@class="next"]/a/@href',
 )
 
-# print(list_parser.get_content())
 for page in list_parser.get_content():
     print(page)
 

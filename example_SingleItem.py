@@ -1,6 +1,6 @@
 from schemes.SingleItem import SingleItem
 
-
+# Пример парсинга одиночной страницы (одного товара)
 single = SingleItem(
         domain='http://quotes.toscrape.com',
         # start_url='', - Здесь не нужен
@@ -22,7 +22,6 @@ single.add_urls([
     'http://quotes.toscrape.com/author/Jane-Austen'
 ])
 
-# print(single.get_content())
 for page in single.get_content():
     print(page)
 
