@@ -8,7 +8,8 @@ logger = logging.getLogger('app_logger')
 
 class ListItems(Base):
 
-    def get_content(self):
+    def get_content(self, max_pages: int = 0):
+        i = 0
         while True:
             try:
                 self.text_response = self._http_query.http_get_request(self._start_url)
@@ -23,4 +24,7 @@ class ListItems(Base):
             except Exception as e:
                 logger.exception(e)
 
-
+            if max_pages > 0:
+                i += 1
+                if i >= max_pages:
+                    break

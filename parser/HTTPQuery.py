@@ -49,6 +49,7 @@ class HTTPQuery:
         self.__history_links = set()
         self.__tasks = []
         self.__start_time = time()
+        self.session = None
 
 
     def clear(self):
@@ -104,24 +105,40 @@ class HTTPQuery:
                 return None
 
 
+    # url = "https://www.ebay.com/signin/s"
+    # data_login = {"userid": "frank345345.zuver@gmail.com", "pass": "2355235qwe123QWE!!1"}
+    #
+    # async def http_post_contents(client, url, data):
+    #     while True:
+    #         try:
+    #             async with client.post(url, headers=headers, data=data) as r:
+    #                 logger.info(f'Запрос: {url}')
+    #                 return await r.text()
+    #         except:
+    #             time.sleep(1)
+
+
     async def http_get_contents(self, sem, url):
         """ асинхронный """
         try:
             async with sem:
                 async with aiohttp.ClientSession(headers=random.choice(HEADERS)) as session:
-                    return await self._fetch(session, url)
+                    self.session = session
+                    return await self._fetch(self.session, url)
         except Exception as e:
             logger.exception(e)
 
 
     def http_get_request(self, url):
         """ синхронный """
-        r = requests.get(url, headers=random.choice(HEADERS))
-        if r.status_code == 200:
-            logger.debug(f'Статус: {r.status_code}, {url}')
-            return r.text
-        else:
-            logger.warning(f'Статус: {r.status_code}, {url}')
+        with requests.Session() as session:
+            self.session = session
+            r = self.session.get(url, headers=random.choice(HEADERS))
+            if r.status_code == 200:
+                logger.debug(f'Статус: {r.status_code}, {url}')
+                return r.text
+            else:
+                logger.warning(f'Статус: {r.status_code}, {url}')
 
 
     async def __start(self):

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1182</width>
+    <height>886</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>1161</width>
+      <height>661</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab_single">
+     <attribute name="title">
+      <string>Одиночная страница</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>1141</width>
+        <height>341</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>ключи будут именами полей CSV</string>
+      </property>
+      <property name="title">
+       <string>xpath пути к элементам (одна страница)</string>
+      </property>
+      <widget class="QTextEdit" name="xpaths_single_elements_text_edit">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>1141</width>
+         <height>321</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>новая пара с новой строки</string>
+       </property>
+       <property name="placeholderText">
+        <string>ключ : значение</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>370</y>
+        <width>1131</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Адреса URL</string>
+      </property>
+      <widget class="QTextEdit" name="single_urls_text_edit">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>1131</width>
+         <height>241</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>новое значение с новой строки</string>
+       </property>
+       <property name="placeholderText">
+        <string>http://example.com/</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_objects">
+     <attribute name="title">
+      <string>Список объектов</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>160</y>
+        <width>1161</width>
+        <height>501</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>ключи будут именами полей CSV</string>
+      </property>
+      <property name="title">
+       <string>xpath пути к элементам [в объектах] </string>
+      </property>
+      <widget class="QTextEdit" name="xpaths_objects_elements_text_edit">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>1161</width>
+         <height>451</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>новая пара с новой строки</string>
+       </property>
+       <property name="placeholderText">
+        <string>ключ : значение</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>1131</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label">
+         <property name="toolTip">
+          <string>С этой страницы начнётся работа</string>
+         </property>
+         <property name="text">
+          <string>Стартовый URL адрес</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="start_url_line_edit">
+         <property name="toolTip">
+          <string>С этой страницы начнётся работа</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_5">
+         <property name="toolTip">
+          <string>Будут собираться ссылки для парсинга одиночных страниц. 
+Если указан путь к объекту, поиск будет вестись внутри объекта.</string>
+         </property>
+         <property name="text">
+          <string>xpath на одиночные страницы</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLineEdit" name="xpath_singles_pages_line_edit">
+         <property name="toolTip">
+          <string>Будут собираться ссылки для парсинга одиночных страниц</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="toolTip">
+          <string>Путь к DIV блокам одного товара в ленте</string>
+         </property>
+         <property name="text">
+          <string>xpath к объектам</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="xpath_objects_line_edit">
+         <property name="toolTip">
+          <string>Путь к DIV блокам одного товара в ленте</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_6">
+         <property name="toolTip">
+          <string>Путь к ссылке на следующую страницу</string>
+         </property>
+         <property name="text">
+          <string>xpath на следующую страницу</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLineEdit" name="xpath_next_page_line_edit">
+         <property name="toolTip">
+          <string>Путь к ссылке на следующую страницу</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>251</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Страниц максимум</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="max_page_spin_box">
+         <property name="toolTip">
+          <string>0 - не ограничено</string>
+         </property>
+         <property name="maximum">
+          <number>999999999</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>11</y>
+      <width>1161</width>
+      <height>77</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="start_btn">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgba(12, 141, 39, 191);
+color: rgb(255, 255, 255);
+font-weight: bold;</string>
+         </property>
+         <property name="text">
+          <string>Старт</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="save_btn">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(164, 0, 0);
+color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>Сохранить
+настройки</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Домен</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="domen_line_edit">
+          <property name="placeholderText">
+           <string>http://example.com</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Режим</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QRadioButton" name="radio_single">
+          <property name="toolTip">
+           <string>Детальная страница одного товара</string>
+          </property>
+          <property name="text">
+           <string>Только одиночные страницы</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radio_objects">
+          <property name="toolTip">
+           <string>Список товаров или лента новостей на одной странице</string>
+          </property>
+          <property name="text">
+           <string>Только списки объектов</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radio_objects_and_single">
+          <property name="text">
+           <string>Списки + Одиночные</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>1161</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QTextBrowser" name="message_box_text_browser"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

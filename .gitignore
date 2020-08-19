@@ -5,3 +5,8 @@ _*
 __pycache__
 probe.py
 test*
+build
+dist
+results
+*.spec
+gui/exam
