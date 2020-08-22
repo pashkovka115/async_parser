@@ -9,4 +9,5 @@ build
 dist
 results
 *.spec
+back_*
 gui/exam
