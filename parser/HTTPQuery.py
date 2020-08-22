@@ -38,7 +38,7 @@ class HTTPQuery:
 
         self.__sleeping = sleeping
         self.__domain = domain
-        self.__lock = asyncio.Lock()
+        # self.__lock = asyncio.Lock() todo: добавляю thread, вместе с ним нехочет работать
         # self.__semaphore = asyncio.Semaphore(semaphore)
         self.__semaphore = semaphore
         self.__timeout = timeout

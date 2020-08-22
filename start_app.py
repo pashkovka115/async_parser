@@ -33,16 +33,26 @@ class MyWindow(QMainWindow):
         if not os.path.isdir(os.path.dirname(self.utils.getRootDir()) + '/results'):
             os.mkdir(os.path.dirname(self.utils.getRootDir()) + '/results')
 
+        self.app_thread = Application(self, self.settings)
+        # app.run()
+        self.app_thread.app_message.connect(self.add_message)
+
 
 
     def on_start(self):
+        self.ui.message_box_text_browser.clear()
         self.ui.save_btn.click()
         self.ui.save_btn.setEnabled(False)
         self.ui.start_btn.setEnabled(False)
-        app = Application(self, self.settings)
-        app.procces()
+
+        self.app_thread.start()
+
         self.ui.save_btn.setEnabled(True)
         self.ui.start_btn.setEnabled(True)
+
+
+    def add_message(self, value):
+        self.ui.message_box_text_browser.append(value)
 
 
 

@@ -3,6 +3,9 @@ from random import randint
 from time import sleep
 
 # from gui import Ui_MainWindow
+from PySide2 import QtCore
+from PySide2.QtCore import Signal
+
 from parser import Utils
 from schemes.ListItems import ListItems
 from schemes.SingleItem import SingleItem
@@ -10,9 +13,13 @@ from parser.Writer import Writer
 # from start_app import MyWindow
 
 
-class Application:
+class Application(QtCore.QThread):
+
+    app_message = Signal(str)
 
     def __init__(self, window, settings):
+        super().__init__()
+
         self.window = window
         self.settings = settings.get_settings()
         self.domain = self.settings.value('Parser/domain', None)
@@ -20,8 +27,8 @@ class Application:
         self.utils = Utils()
 
 
-    def procces(self):
-        self.window.ui.message_box_text_browser.append('Получаю настройки')
+    def run(self):
+        self.app_message.emit('Получаю настройки')
 
         self.settings.beginGroup('Parser')
         single_page = self.settings.value('scaner_mode_single')
@@ -29,6 +36,7 @@ class Application:
         single_and_objects_page = self.settings.value('scaner_mode_objects_and_single')
         self.settings.endGroup()
 
+        self.app_message.emit('Начинаю парсить...')
         if single_page:
             self.single_page()
         elif objects_page:
@@ -38,7 +46,7 @@ class Application:
         else:
             raise Exception('Не поддерживаемый режим сканирования')
 
-        self.window.ui.message_box_text_browser.append('Парсинг окончен.')
+        self.app_message.emit('Парсинг окончен.')
         print('Парсинг окончен.')
 
 
