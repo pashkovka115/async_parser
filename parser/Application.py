@@ -2,27 +2,26 @@ import os
 from random import randint
 from time import sleep
 
-from PySide2.QtCore import QProcess
-
-from gui import Ui_MainWindow
+# from gui import Ui_MainWindow
 from parser import Utils
 from schemes.ListItems import ListItems
 from schemes.SingleItem import SingleItem
 from parser.Writer import Writer
+# from start_app import MyWindow
 
 
 class Application:
 
-    def __init__(self, window:Ui_MainWindow, settings):
+    def __init__(self, window, settings):
         self.window = window
-        self.settings = settings
+        self.settings = settings.get_settings()
         self.domain = self.settings.value('Parser/domain', None)
         self.writer = Writer()
         self.utils = Utils()
 
 
     def procces(self):
-        self.window.message_box_text_browser.append('Получаю настройки')
+        self.window.ui.message_box_text_browser.append('Получаю настройки')
 
         self.settings.beginGroup('Parser')
         single_page = self.settings.value('scaner_mode_single')
@@ -39,7 +38,7 @@ class Application:
         else:
             raise Exception('Не поддерживаемый режим сканирования')
 
-        self.window.message_box_text_browser.append('Парсинг окончен.')
+        self.window.ui.message_box_text_browser.append('Парсинг окончен.')
         print('Парсинг окончен.')
 
 
