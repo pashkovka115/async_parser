@@ -2,8 +2,8 @@ import os
 
 from PySide2.QtWidgets import QApplication, QMainWindow
 
-from parser import Utils
-from parser import Application
+from parsera import Utils
+from parsera import Application
 from gui import Settings
 from gui import Ui_MainWindow
 import sys

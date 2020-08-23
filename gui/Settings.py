@@ -1,6 +1,6 @@
 from os import path
 from PySide2 import QtCore
-from parser.utils import Utils
+from parsera.utils import Utils
 
 
 class Settings:

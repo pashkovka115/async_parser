@@ -6,10 +6,10 @@ from time import sleep
 from PySide2 import QtCore
 from PySide2.QtCore import Signal
 
-from parser import Utils
+from parsera import Utils
 from schemes.ListItems import ListItems
 from schemes.SingleItem import SingleItem
-from parser.Writer import Writer
+from parsera.Writer import Writer
 # from start_app import MyWindow
 
 

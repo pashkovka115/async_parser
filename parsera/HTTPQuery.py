@@ -1,14 +1,16 @@
 import asyncio
 import logging.config
 import random
+import sys
 import urllib.parse
 from time import time
 import requests
 import aiohttp
-import uvloop
+if sys.platform.startswith('linux'):
+    import uvloop
 
-from parser.headers import HEADERS
-from parser.logger import logger_config
+from parsera.headers import HEADERS
+from parsera.logger import logger_config
 
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('asynchronous_logger')
@@ -139,6 +141,7 @@ class HTTPQuery:
                 return r.text
             else:
                 logger.warning(f'Статус: {r.status_code}, {url}')
+                return False
 
 
     async def __start(self):
@@ -153,7 +156,9 @@ class HTTPQuery:
 
 
     def run(self):
-        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+        if sys.platform.startswith('linux'):
+            asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
         self.loop = asyncio.get_event_loop()
 
         self.result = self.loop.run_until_complete(self.__start())

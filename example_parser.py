@@ -1,4 +1,4 @@
-from parser import Parser
+from parsera import Parser
 
 parser = Parser(
         domain='http://quotes.toscrape.com',

@@ -1,5 +1,5 @@
-from parser import Parser
-from parser.HTTPQuery import HTTPQuery
+from parsera import Parser
+from parsera.HTTPQuery import HTTPQuery
 
 
 class Base:

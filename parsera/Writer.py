@@ -2,7 +2,7 @@ import csv
 import logging.config
 import os
 
-from parser.logger import logger_config
+from parsera.logger import logger_config
 
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('asynchronous_logger')
@@ -13,7 +13,7 @@ class Writer:
 
     def write_csv_row(self, file_name, data:dict, order=None, mode='a'):
 
-        with open(file_name, mode=mode) as file:
+        with open(file_name, mode=mode, newline='') as file:
             if not bool(order):
                 order = list(data.keys())
                 order.sort()

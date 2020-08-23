@@ -5,7 +5,7 @@ from ctypes import *
 
 from lxml import html, etree
 from lxml.html import HtmlElement
-from parser.logger import logger_config
+from parsera.logger import logger_config
 
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('asynchronous_logger')

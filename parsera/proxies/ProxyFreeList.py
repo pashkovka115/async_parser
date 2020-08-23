@@ -1,8 +1,8 @@
 import os
 import random
 from lxml import html, etree
-from parser.utils import Utils
-from parser.headers import HEADERS
+from parsera.utils import Utils
+from parsera.headers import HEADERS
 from requests_html import HTMLSession
 
 

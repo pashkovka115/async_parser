@@ -1,6 +1,6 @@
 from schemes.Base import Base
 import logging.config
-from parser.logger import logger_config
+from parsera.logger import logger_config
 
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('app_logger')
